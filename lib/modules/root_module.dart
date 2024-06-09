@@ -8,7 +8,7 @@ import '../model_extensions/model_extensions.dart';
 import './initialization_state.dart';
 import './module.dart';
 
-final class RootModule extends Module {
+final class RootModule extends Module implements OnInit {
   /// The singleton instance of the last root module that was loaded.
   static late final RootModule _instance;
 
@@ -55,7 +55,8 @@ final class RootModule extends Module {
   }
 
   /// Initializes the models.
-  Future<void> initialize() async {
+  @override
+  Future<void> initialize(BuildContext context) async {
     // Ensure that module does not initialize twice.
     if (_initState != InitializationState.none) {
       throw 'Initialization has already been started';
@@ -83,7 +84,7 @@ final class RootModule extends Module {
     await Future.wait(
       getAllModelsWhereType<OnInit>().map(
         // Initialize the model asynchronously.
-        (model) async => await model.initialize(),
+        (model) async => await model.initialize(context),
       ),
     );
 

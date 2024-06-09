@@ -33,7 +33,7 @@ class ModularApp extends StatelessWidget {
         provides: provides,
       )
         ..load(context)
-        ..initialize(),
+        ..initialize(context),
       child: child,
     );
   }
