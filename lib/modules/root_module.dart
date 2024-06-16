@@ -16,8 +16,8 @@ final class RootModule extends Module implements OnInit {
   static RootModule get instance => _instance;
 
   /// Gets the RootModule instance from the current [context].
-  static RootModule of(BuildContext context) {
-    return Provider.of<RootModule>(context);
+  static RootModule of(BuildContext context, [bool listen = false]) {
+    return Provider.of<RootModule>(context, listen: listen);
   }
 
   /// The current initialization state.
