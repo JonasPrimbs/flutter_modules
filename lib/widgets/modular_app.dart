@@ -33,13 +33,9 @@ class ModularApp extends StatelessWidget {
     // to child widgets.
     return Provider(
       create: (context) => RootModule(
-          imports: imports,
-          provides: provides,
-        ),//;
-        // module.load(context);
-        // module.initialize(context);
-        // return module;
-      // },
+        imports: imports,
+        provides: provides,
+      ),
       lazy: false,
       child: _AppLoader(
         loadingChild: loadingScreen,
