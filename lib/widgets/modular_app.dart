@@ -28,12 +28,15 @@ class ModularApp extends StatelessWidget {
     // Loads the RootModule instance and provides imported modules and models
     // to child widgets.
     return Provider(
-      create: (context) => RootModule(
-        imports: imports,
-        provides: provides,
-      )
-        ..load(context)
-        ..initialize(context),
+      create: (context) {
+        final module = RootModule(
+          imports: imports,
+          provides: provides,
+        );
+        module.load(context);
+        module.initialize(context);
+        return module;
+      },
       child: child,
     );
   }
