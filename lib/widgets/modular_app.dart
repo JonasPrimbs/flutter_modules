@@ -8,6 +8,9 @@ class ModularApp extends StatelessWidget {
   /// The widget's child.
   final Widget child;
 
+  /// The app's loading screen.
+  final Widget loadingScreen;
+
   /// Modules to import.
   final Map<Type, ModuleBuilderFunction> imports;
 
@@ -20,6 +23,7 @@ class ModularApp extends StatelessWidget {
     super.key,
     required this.imports,
     this.provides = const {},
+    required this.loadingScreen,
     required this.child,
   });
 
@@ -28,17 +32,50 @@ class ModularApp extends StatelessWidget {
     // Loads the RootModule instance and provides imported modules and models
     // to child widgets.
     return Provider(
-      create: (context) {
-        final module = RootModule(
+      create: (context) => RootModule(
           imports: imports,
           provides: provides,
-        );
-        module.load(context);
-        module.initialize(context);
-        return module;
-      },
+        ),//;
+        // module.load(context);
+        // module.initialize(context);
+        // return module;
+      // },
       lazy: false,
-      child: child,
+      child: _AppLoader(
+        loadingChild: loadingScreen,
+        child: child,
+      ),
+    );
+  }
+}
+
+class _AppLoader extends StatelessWidget {
+  final Widget child;
+  final Widget loadingChild;
+
+  const _AppLoader({
+    required this.loadingChild,
+    required this.child,
+  });
+
+  Future<bool> loadApp(BuildContext context) async {
+    final rootModule = RootModule.of(context);
+    rootModule.load(context);
+    await rootModule.initialize(context);
+    return true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: loadApp(context),
+      builder: (context, snapshot) {
+        if (snapshot.data ?? false) {
+          return child;
+        } else {
+          return loadingChild;
+        }
+      },
     );
   }
 }
