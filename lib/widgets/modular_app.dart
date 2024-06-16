@@ -37,6 +37,7 @@ class ModularApp extends StatelessWidget {
         module.initialize(context);
         return module;
       },
+      lazy: false,
       child: child,
     );
   }
