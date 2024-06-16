@@ -80,13 +80,17 @@ final class RootModule extends Module implements OnInit {
       ];
     }
 
-    // Initialize all models that implement OnInit at once.
-    await Future.wait(
-      getAllModelsWhereType<OnInit>().map(
-        // Initialize the model asynchronously.
-        (model) async => await model.initialize(context),
-      ),
-    );
+    try {
+      // Initialize all models that implement OnInit at once.
+      await Future.wait(
+        getAllModelsWhereType<OnInit>().map(
+          // Initialize the model asynchronously.
+          (model) async => await model.initialize(context),
+        ),
+      );
+    } catch (error) {
+      throw 'Failed to initialize all models: $error';
+    }
 
     // Update initialization state.
     _setInitState(InitializationState.initialized);
