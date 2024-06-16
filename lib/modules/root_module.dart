@@ -85,7 +85,13 @@ final class RootModule extends Module implements OnInit {
       await Future.wait(
         getAllModelsWhereType<OnInit>().map(
           // Initialize the model asynchronously.
-          (model) async => await model.initialize(context),
+          (model) async {
+            try {
+              await model.initialize(context);
+            } catch (error) {
+              throw 'Failed to initialize model "${model.runtimeType}": $error';
+            }
+          },
         ),
       );
     } catch (error) {
