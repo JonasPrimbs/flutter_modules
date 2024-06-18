@@ -9,7 +9,7 @@ class ModularApp extends StatelessWidget {
   final Widget child;
 
   /// The app's loading screen.
-  final Widget loadingScreen;
+  final Widget? loadingScreen;
 
   /// Modules to import.
   final Map<Type, ModuleBuilderFunction> imports;
@@ -23,7 +23,7 @@ class ModularApp extends StatelessWidget {
     super.key,
     required this.imports,
     this.provides = const {},
-    required this.loadingScreen,
+    this.loadingScreen,
     required this.child,
   });
 
@@ -47,10 +47,10 @@ class ModularApp extends StatelessWidget {
 
 class _AppLoader extends StatelessWidget {
   final Widget child;
-  final Widget loadingChild;
+  final Widget? loadingChild;
 
   const _AppLoader({
-    required this.loadingChild,
+    this.loadingChild,
     required this.child,
   });
 
@@ -66,10 +66,10 @@ class _AppLoader extends StatelessWidget {
     return FutureBuilder(
       future: loadApp(context),
       builder: (context, snapshot) {
-        if (snapshot.data ?? false) {
+        if (loadingChild == null || (snapshot.data ?? false)) {
           return child;
         } else {
-          return loadingChild;
+          return loadingChild!;
         }
       },
     );

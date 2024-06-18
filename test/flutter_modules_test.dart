@@ -6,6 +6,7 @@ class ModelA extends Model {
   static int n = 0;
   int a = 10;
   ModelA() {
+    print('Create ModelA');
     n++;
   }
 }
@@ -14,6 +15,7 @@ class ModelB extends Model {
   static int n = 0;
   int b = 20;
   ModelB() {
+    print('Create ModelB');
     n++;
   }
 }
@@ -22,6 +24,7 @@ class ModelC extends Model {
   static int n = 0;
   int c = 30;
   ModelC() {
+    print('Create ModelC');
     n++;
   }
 }
