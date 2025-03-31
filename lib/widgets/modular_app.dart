@@ -39,7 +39,6 @@ class ModularApp extends StatelessWidget {
       lazy: false,
       child: _AppLoader(
         loadingChild: loadingScreen,
-        context: context,
         child: child,
       ),
     );
@@ -49,11 +48,9 @@ class ModularApp extends StatelessWidget {
 final class _AppLoader extends StatefulWidget {
   final Widget child;
   final Widget? loadingChild;
-  final BuildContext context;
 
   const _AppLoader({
     this.loadingChild,
-    required this.context,
     required this.child,
   });
 
@@ -73,10 +70,9 @@ final class _AppLoaderState extends State<_AppLoader> {
 
   @override
   Widget build(BuildContext context) {
-    
     if (!_loaded && !_loading) {
       _loading = true;
-      _loadApp(widget.context).then((value) {
+      _loadApp(context).then((value) {
         setState(() {
           _loaded = true;
         });
