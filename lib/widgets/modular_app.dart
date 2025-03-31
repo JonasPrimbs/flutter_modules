@@ -63,6 +63,7 @@ final class _AppLoader extends StatefulWidget {
 
 final class _AppLoaderState extends State<_AppLoader> {
   bool _loaded = false;
+  bool _loading = false;
 
   Future<void> _loadApp(BuildContext context) async {
     final rootModule = RootModule.of(context);
@@ -71,23 +72,22 @@ final class _AppLoaderState extends State<_AppLoader> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    _loadApp(widget.context).then((value) {
-      setState(() {
-        _loaded = true;
-      });
-    },);
-  }
-
-  @override
   Widget build(BuildContext context) {
-        final loader = widget.loadingChild;
-        if (loader != null && !_loaded) {
-          return loader;
-        } else {
-          return widget.child;
-        }
+    
+    if (!_loaded && !_loading) {
+      _loading = true;
+      _loadApp(widget.context).then((value) {
+        setState(() {
+          _loaded = true;
+        });
+      },);
+    }
+
+    final loader = widget.loadingChild;
+    if (loader != null && !_loaded) {
+      return loader;
+    } else {
+      return widget.child;
+    }
   }
 }
