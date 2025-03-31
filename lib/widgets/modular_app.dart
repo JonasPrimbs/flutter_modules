@@ -39,40 +39,55 @@ class ModularApp extends StatelessWidget {
       lazy: false,
       child: _AppLoader(
         loadingChild: loadingScreen,
+        context: context,
         child: child,
       ),
     );
   }
 }
 
-class _AppLoader extends StatelessWidget {
+final class _AppLoader extends StatefulWidget {
   final Widget child;
   final Widget? loadingChild;
+  final BuildContext context;
 
   const _AppLoader({
     this.loadingChild,
+    required this.context,
     required this.child,
   });
 
-  Future<bool> loadApp(BuildContext context) async {
+  @override
+  State<_AppLoader> createState() => _AppLoaderState();
+}
+
+final class _AppLoaderState extends State<_AppLoader> {
+  bool _loaded = false;
+
+  Future<void> _loadApp(BuildContext context) async {
     final rootModule = RootModule.of(context);
     rootModule.load(context);
     await rootModule.initialize(context);
-    return true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadApp(widget.context).then((value) {
+      setState(() {
+        _loaded = true;
+      });
+    },);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: loadApp(context),
-      builder: (context, snapshot) {
-        final loader = loadingChild;
-        if (loader != null && !snapshot.hasData) {
+        final loader = widget.loadingChild;
+        if (loader != null && _loaded) {
           return loader;
         } else {
-          return child;
+          return widget.child;
         }
-      },
-    );
   }
 }
