@@ -66,10 +66,11 @@ class _AppLoader extends StatelessWidget {
     return FutureBuilder(
       future: loadApp(context),
       builder: (context, snapshot) {
-        if (loadingChild == null || (snapshot.data ?? false)) {
-          return child;
+        final loader = loadingChild;
+        if (loader != null && !snapshot.hasData) {
+          return loader;
         } else {
-          return loadingChild!;
+          return child;
         }
       },
     );
