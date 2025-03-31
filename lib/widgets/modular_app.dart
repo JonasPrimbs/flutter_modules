@@ -84,7 +84,7 @@ final class _AppLoaderState extends State<_AppLoader> {
   @override
   Widget build(BuildContext context) {
         final loader = widget.loadingChild;
-        if (loader != null && _loaded) {
+        if (loader != null && !_loaded) {
           return loader;
         } else {
           return widget.child;
