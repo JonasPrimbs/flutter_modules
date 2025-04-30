@@ -136,7 +136,7 @@ class Module {
         }
 
         // Get module from root module.
-        final module = modulePath.first._models[import.key] as Module;
+        final module = modulePath.first._modules[import.key] as Module;
 
         // Register module in this module.
         _registerModule(module);
