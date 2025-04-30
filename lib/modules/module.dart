@@ -142,8 +142,10 @@ class Module {
         _registerModule(module);
         // Register module to all parent modules if provided.
         for (final parentModule in modulePath) {
-          // Register created module to parent module.
-          parentModule._registerModule(module);
+          // Register created module to parent module if not already registered.
+          if (!parentModule._modules.containsKey(import.key)){
+            parentModule._registerModule(module);
+          }
         }
       } else {
         // Create new module instance.
