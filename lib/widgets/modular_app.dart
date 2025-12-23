@@ -59,8 +59,27 @@ final class _AppLoader extends StatefulWidget {
 }
 
 final class _AppLoaderState extends State<_AppLoader> {
-  bool _loaded = false;
-  bool _loading = false;
+  late final Future<void> _initFuture;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initFuture = _loadApp(context).catchError((error, stack) {
+      // Make sure it is surfaced in Flutter's error pipeline:
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stack,
+          library: 'flutter_modules',
+          context: ErrorDescription('while initializing RootModule'),
+        ),
+      );
+
+      // Keep the Future failed so FutureBuilder can show an error UI.
+      Error.throwWithStackTrace(error, stack);
+    });
+  }
 
   Future<void> _loadApp(BuildContext context) async {
     final rootModule = RootModule.of(context);
@@ -70,20 +89,19 @@ final class _AppLoaderState extends State<_AppLoader> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_loaded && !_loading) {
-      _loading = true;
-      _loadApp(context).then((value) {
-        setState(() {
-          _loaded = true;
-        });
-      },);
-    }
+    return FutureBuilder<void>(
+      future: _initFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return widget.loadingChild ?? const SizedBox.shrink();
+        }
 
-    final loader = widget.loadingChild;
-    if (loader != null && !_loaded) {
-      return loader;
-    } else {
-      return widget.child;
-    }
+        if (snapshot.hasError) {
+          return ErrorWidget(snapshot.error!);
+        }
+
+        return widget.child;
+      },
+    );
   }
 }
