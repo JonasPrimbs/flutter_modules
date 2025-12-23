@@ -142,6 +142,8 @@ void main() {
       ),
     );
 
+    await tester.pumpAndSettle();
+
     final a = find.text('main: 10');
     final b = find.text('main: 20');
     final c = find.text('main: 30');
